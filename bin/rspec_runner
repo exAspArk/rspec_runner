@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+cmd = ARGV[0]
+
+if cmd == 'monitor'.freeze
+  require 'rspec_runner/server'
+  RspecRunner::Server.run
+else
+  require 'rspec_runner/client'
+  RspecRunner::Client.execute(cmd)
+end
