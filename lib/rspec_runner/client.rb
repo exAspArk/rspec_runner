@@ -21,7 +21,7 @@ module RspecRunner
           end
         end
 
-        puts 'Server is down'
+        puts 'Server is down :('
       end
     end
   end

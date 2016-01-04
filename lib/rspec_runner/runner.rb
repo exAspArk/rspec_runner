@@ -20,7 +20,7 @@ module RspecRunner
 
       private
 
-      # TOOD: handle errors, get rid of zombie
+      # TODO: handle errors, get rid of zombie
       def start
         @pid = fork { exec(CMD) }
       end
