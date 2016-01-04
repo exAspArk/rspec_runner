@@ -4,8 +4,8 @@ cmd = ARGV[0]
 
 case cmd
 when 'monitor'.freeze
-  require 'rspec_runner/runner'
-  RspecRunner::Runner.run
+  require 'rspec_runner/monitor'
+  RspecRunner::Monitor.run
 when 'start'.freeze
   require 'rspec_runner/server'
   RspecRunner::Server.run
