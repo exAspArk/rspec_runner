@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["exAspArk"]
   spec.email         = ["exaspark@gmail.com"]
 
-  spec.summary       = %q{Custom application preloader}
-  spec.description   = %q{Works even with non-rails app}
+  spec.summary       = %q{Application preloader for running RSpec}
+  spec.description   = %q{Works even with non-Rails apps}
   spec.homepage      = "https://github.com/exAspArk/rspec_runner"
   spec.license       = "MIT"
 
