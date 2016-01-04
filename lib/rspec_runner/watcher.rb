@@ -1,11 +1,8 @@
 require 'listen'
+require 'rspec_runner/configuration'
 
 module RspecRunner
   class Watcher
-    # TODO: to config
-    DIRECTORIES = ["#{Dir.pwd}/app", "#{Dir.pwd}/lib"]
-    PATTERN = /\.rb$/
-
     class << self
       def run(&block)
         if @thread then
@@ -13,7 +10,11 @@ module RspecRunner
         end
 
         @thread = Thread.new do
-          @listener = Listen.to(*DIRECTORIES, only: PATTERN, wait_for_delay: 1) do |modified, added, removed|
+          @listener = Listen.to(
+            *RspecRunner.configuration.watch_directories,
+            only: RspecRunner.configuration.watch_pattern,
+            wait_for_delay: 1
+          ) do |modified, added, removed|
             if((modified.size + added.size + removed.size) > 0)
               block.call(modified: modified, added: added, removed: removed)
             end

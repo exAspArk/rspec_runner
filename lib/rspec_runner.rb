@@ -1,6 +1,5 @@
-require "rspec_runner/version"
-require "rspec_runner/client"
-require "rspec_runner/server"
+require 'rspec_runner/version'
+require 'rspec_runner/configuration'
 
 module RspecRunner
 end

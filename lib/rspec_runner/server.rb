@@ -1,10 +1,8 @@
 require 'drb/drb'
+require 'rspec_runner/configuration'
 
 module RspecRunner
   class Server
-    # TODO: move to config
-    DRB_URI = 'druby://localhost:8787'.freeze
-
     class << self
       def run
         puts 'Loading dependencies...'
@@ -13,7 +11,7 @@ module RspecRunner
         require 'rspec'
         require 'spec_helper.rb'
 
-        DRb.start_service(DRB_URI, self)
+        DRb.start_service(RspecRunner.configuration.uri, self)
         puts 'Server started!'
 
         DRb.thread.join

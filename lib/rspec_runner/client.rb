@@ -1,19 +1,16 @@
 require 'drb/drb'
+require 'rspec_runner/configuration'
 
 module RspecRunner
   class Client
-    # TODO: move to config
-    DRB_URI = 'druby://localhost:8787'.freeze
-    TIMEOUT = 10 # seconds
-
     class << self
       def execute(*args)
         DRb.start_service
-        runner = DRbObject.new_with_uri(DRB_URI)
+        runner = DRbObject.new_with_uri(RspecRunner.configuration.uri)
 
         try_count = 0
         print 'Running tests... '
-        while try_count <= TIMEOUT
+        while try_count <= RspecRunner.configuration.client_timeout
           begin
             runner.execute(*args)
             puts 'done!'
