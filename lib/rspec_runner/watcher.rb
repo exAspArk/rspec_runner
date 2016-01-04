@@ -13,6 +13,7 @@ module RspecRunner
           @listener = Listen.to(
             *RspecRunner.configuration.watch_directories,
             only: RspecRunner.configuration.watch_pattern,
+            ignore: RspecRunner.configuration.ignore_pattern,
             wait_for_delay: 1
           ) do |modified, added, removed|
             if((modified.size + added.size + removed.size) > 0)
