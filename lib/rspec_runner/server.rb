@@ -7,11 +7,13 @@ module RspecRunner
 
     class << self
       def run
-        require 'rspec'
-        DRb.start_service(DRB_URI, self)
+        puts 'Loading dependencies...'
 
         $LOAD_PATH.unshift File.expand_path("#{Dir.pwd}/spec")
+        require 'rspec'
         require 'spec_helper.rb'
+
+        DRb.start_service(DRB_URI, self)
         puts 'Server started!'
 
         DRb.thread.join

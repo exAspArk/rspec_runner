@@ -2,7 +2,11 @@
 
 cmd = ARGV[0]
 
-if cmd == 'monitor'.freeze
+case cmd
+when 'monitor'.freeze
+  require 'rspec_runner/runner'
+  RspecRunner::Runner.run
+when 'start'.freeze
   require 'rspec_runner/server'
   RspecRunner::Server.run
 else

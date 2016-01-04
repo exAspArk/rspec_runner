@@ -12,7 +12,7 @@ module RspecRunner
         runner = DRbObject.new_with_uri(DRB_URI)
 
         try_count = 0
-        print 'Running... '
+        print 'Running tests... '
         while try_count <= TIMEOUT
           begin
             runner.execute(*args)
