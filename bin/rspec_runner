@@ -6,9 +6,6 @@ case cmd
 when 'monitor'.freeze
   require 'rspec_runner/monitor'
   RspecRunner::Monitor.run
-when 'start'.freeze
-  require 'rspec_runner/server'
-  RspecRunner::Server.run
 else
   require 'rspec_runner/client'
   RspecRunner::Client.execute(cmd)
