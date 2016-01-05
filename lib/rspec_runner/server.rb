@@ -1,3 +1,4 @@
+require 'socket'
 require 'drb/drb'
 require 'rspec_runner/configuration'
 
@@ -11,8 +12,10 @@ module RspecRunner
         require 'rspec'
         require 'spec_helper.rb'
 
-        DRb.start_service(RspecRunner.configuration.uri, self)
+        DRb.start_service(assign_uri, self)
         puts 'Server started!'
+
+        at_exit { stop }
 
         DRb.thread.join
       end
@@ -24,7 +27,24 @@ module RspecRunner
         reset_rspec!
       end
 
+      def stop
+        File.delete(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
+      end
+
       private
+
+      def assign_uri
+        socket = Socket.new(:INET, :STREAM, 0)
+        socket.bind(Addrinfo.tcp('127.0.0.1'.freeze, 0))
+        free_port = socket.local_address.ip_port
+        uri = "druby://localhost:#{free_port}"
+
+        dirname = File.dirname(RspecRunner.configuration.uri_filepath)
+        FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+        File.write(RspecRunner.configuration.uri_filepath, uri)
+
+        uri
+      end
 
       def filepaths(path)
         multiple_files?(path) ? Dir.glob(path) : [path]

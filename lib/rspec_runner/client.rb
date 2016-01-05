@@ -6,12 +6,16 @@ module RspecRunner
     class << self
       def execute(*args)
         DRb.start_service
-        runner = DRbObject.new_with_uri(RspecRunner.configuration.uri)
-
         try_count = 0
-        print 'Running tests... '
-        while try_count <= RspecRunner.configuration.client_timeout
+        print 'Connecting... '
+
+        while try_count < RspecRunner.configuration.client_timeout
           begin
+            uri = fetch_uri
+            raise DRb::DRbConnError unless uri
+
+            runner = DRbObject.new_with_uri(uri)
+            print 'running... '
             runner.execute(*args)
             puts 'done!'
             return true
@@ -22,6 +26,12 @@ module RspecRunner
         end
 
         puts 'Server is down :('
+      end
+
+      private
+
+      def fetch_uri
+        File.read(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
       end
     end
   end

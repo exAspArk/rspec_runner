@@ -1,10 +1,10 @@
 module RspecRunner
   class Configuration
-    attr_accessor :uri, :client_timeout, :watch_directories, :watch_pattern, :ignore_pattern
+    attr_accessor :uri_filepath, :client_timeout, :watch_directories, :watch_pattern, :ignore_pattern
 
     def initialize
-      @uri = 'druby://localhost:8787'.freeze
-      @client_timeout = 10 # seconds
+      @uri_filepath = "#{Dir.pwd}/tmp/rspec_runner"
+      @client_timeout = 60 # seconds
       @watch_directories = ["#{Dir.pwd}"]
       @watch_pattern = /\.rb$/
       @ignore_pattern = /spec\/.+_spec\.rb$/
