@@ -43,12 +43,13 @@ module RspecRunner
         world.instance_variable_set(:@example_group_counts_by_spec_file, Hash.new(0))
         configuration.reset
         configuration.reset_filters if configuration.respond_to?(:reset_filters)
+        configuration.filter_manager = RSpec::Core::FilterManager.new if configuration.respond_to?(:filter_manager=)
         configuration.files_to_run = []
         configuration.files_or_directories_to_run = []
 
-        if configuration.respond_to?(:loaded_spec_files) && set = configuration.loaded_spec_files
-          set.each { |k| set.delete(k) }
-        end
+        return unless configuration.respond_to?(:loaded_spec_files)
+        set = configuration.loaded_spec_files
+        set.each { |k| set.delete(k) }
       end
     end
   end
