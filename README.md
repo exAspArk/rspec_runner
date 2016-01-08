@@ -30,6 +30,26 @@ And then execute:
 
     $ bundle
 
+## Configuration
+
+To customize RspecRunner you have to add `spec/rspec_runner.rb` file with the following content:
+
+```ruby
+# Default config
+
+RspecRunner.configure do |config|
+  config.uri_filepath = 'tmp/rspec_runner'
+  config.client_timeout = 60 # seconds
+
+  config.listen_directories = [Dir.pwd]
+  config.listen_options = { # https://github.com/guard/listen#options
+    only: /\.rb$/,
+    ignore: /spec\/.+_spec\.rb$/,
+    wait_for_delay: 1
+  }
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake false` to run the tests.
@@ -43,7 +63,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## TODO
 
 * Try to kill a process without `kill -9`
-* Make it configurable
 * Add tests!
 * Speedup client
 

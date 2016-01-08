@@ -10,12 +10,8 @@ module RspecRunner
         end
 
         @thread = Thread.new do
-          @listener = Listen.to(
-            *RspecRunner.configuration.watch_directories,
-            only: RspecRunner.configuration.watch_pattern,
-            ignore: RspecRunner.configuration.ignore_pattern,
-            wait_for_delay: 1
-          ) do |modified, added, removed|
+          config = RspecRunner.configuration
+          @listener = Listen.to(*config.listen_directories, config.listen_options) do |modified, added, removed|
             if((modified.size + added.size + removed.size) > 0)
               block.call(modified: modified, added: added, removed: removed)
             end

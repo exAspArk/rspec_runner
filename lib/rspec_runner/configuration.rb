@@ -1,13 +1,14 @@
 module RspecRunner
+  CONFIG_FILEPATH = "#{Dir.pwd}/spec/rspec_runner.rb"
+
   class Configuration
-    attr_accessor :uri_filepath, :client_timeout, :watch_directories, :watch_pattern, :ignore_pattern
+    attr_accessor :uri_filepath, :client_timeout, :listen_directories, :listen_options
 
     def initialize
       @uri_filepath = "#{Dir.pwd}/tmp/rspec_runner"
       @client_timeout = 60 # seconds
-      @watch_directories = ["#{Dir.pwd}"]
-      @watch_pattern = /\.rb$/
-      @ignore_pattern = /spec\/.+_spec\.rb$/
+      @listen_directories = [Dir.pwd]
+      @listen_options = {only: /\.rb$/, ignore: /spec\/.+_spec\.rb$/, wait_for_delay: 1}
     end
   end
 
@@ -18,4 +19,6 @@ module RspecRunner
   def self.configure
     yield(configuration)
   end
+
+  eval(File.new(CONFIG_FILEPATH).read) if File.exists?(CONFIG_FILEPATH)
 end
