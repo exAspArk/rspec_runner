@@ -2,12 +2,15 @@
 
 ## Usage
 
-Run monitor:
+![DEMO](./demo.gif)
+
+Run `monitor`:
 
     $ bundle exec rspec_runner monitor
 
-It runs `monitor`, which requires all dependencies and shows test results with RSpec.
-It also tracks file changes and automatically reloads all dependencies if necessary.
+It runs `monitor`, which preloads dependencies and shows test results with RSpec.
+It also tracks file changes with [listen](https://github.com/guard/listen/) and automatically reloads dependencies if necessary.
+Similar to [spork](https://github.com/sporkrb/spork) it forks a new process but only if files have changed.
 
 Run your test:
 
