@@ -4,7 +4,7 @@ require 'rspec_runner/configuration'
 module RspecRunner
   class Watcher
     class << self
-      def run(&block)
+      def start(&block)
         if @thread then
           raise RuntimeError, "already started"
         end

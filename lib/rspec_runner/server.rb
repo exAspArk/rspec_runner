@@ -5,19 +5,32 @@ require 'rspec_runner/configuration'
 module RspecRunner
   class Server
     class << self
-      def run
-        puts 'Loading dependencies...'
+      def start
+        puts 'Preloading gems...'
+        require 'rubygems'
+        require 'bundler'
+
+        Bundler.load.dependencies.reject! do |d|
+          spec = d.to_spec
+
+          if spec.gem_dir == Dir.pwd
+            @gem_name = spec.name
+          else
+            spec.name == 'rspec_runner'
+          end
+        end
+
+        if gem?
+          Bundler.require(:default, :development)
+        else
+          Bundler.require(:default, :test)
+        end
 
         $LOAD_PATH.unshift File.expand_path("#{Dir.pwd}/spec")
-        require 'rspec'
-        require 'spec_helper.rb'
 
-        DRb.start_service(assign_uri, self)
-        puts 'Server started!'
+        fork_process
 
         at_exit { stop }
-
-        DRb.thread.join
       end
 
       def execute(path)
@@ -27,11 +40,43 @@ module RspecRunner
         reset_rspec!
       end
 
+      def restart
+        stop
+        fork_process
+      end
+
       def stop
+        if @pid && @pid != 0
+          # TODO: try to kill without -9
+          send_signal('KILL')
+        end
         File.delete(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
       end
 
       private
+
+      def gem?
+        !!@gem_name
+      end
+
+      def fork_process
+        @pid = fork do
+          puts 'Preloading dependencies...'
+          require @gem_name if gem?
+          require 'spec_helper.rb'
+
+          DRb.start_service(assign_uri, self)
+          puts 'Server started!'
+
+          DRb.thread.join
+        end
+
+        Process.detach(@pid) # so if the child exits, it dies
+      end
+
+      def send_signal(signal)
+        Process.kill(signal, @pid)
+      end
 
       def assign_uri
         socket = Socket.new(:INET, :STREAM, 0)
