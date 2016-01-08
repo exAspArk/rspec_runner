@@ -29,8 +29,6 @@ module RspecRunner
         $LOAD_PATH.unshift File.expand_path("#{Dir.pwd}/spec")
 
         fork_process
-
-        at_exit { stop }
       end
 
       def execute(path)
