@@ -23,7 +23,7 @@ It connects to `monitor` through DRb and executes tests.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rspec_runner'
+gem 'rspec_runner', require: false
 ```
 
 And then execute:
