@@ -109,6 +109,7 @@ module RspecRunner
         configuration.filter_manager = RSpec::Core::FilterManager.new if configuration.respond_to?(:filter_manager=)
         configuration.files_to_run = []
         configuration.files_or_directories_to_run = []
+        configuration.seed = rand(0xFFFF) if configuration.seed_used?
 
         return unless configuration.respond_to?(:loaded_spec_files)
         set = configuration.loaded_spec_files
