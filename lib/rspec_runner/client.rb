@@ -31,7 +31,9 @@ module RspecRunner
       private
 
       def fetch_uri
-        File.read(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
+        return unless File.exist?(RspecRunner.configuration.uri_filepath)
+        result = File.read(RspecRunner.configuration.uri_filepath)
+        result unless result.empty?
       end
     end
   end
