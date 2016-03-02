@@ -6,6 +6,8 @@ module RspecRunner
   class Server
     class << self
       def start
+        create_uri_file
+
         puts 'Preloading gems...'
         require 'rubygems'
         require 'bundler'
@@ -48,7 +50,7 @@ module RspecRunner
           # TODO: try to kill without -9
           send_signal('KILL')
         end
-        File.delete(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
+        delete_uri_file
       end
 
       private
@@ -76,15 +78,27 @@ module RspecRunner
         Process.kill(signal, @pid)
       end
 
+      def create_uri_file(uri = nil)
+        dirname = File.dirname(RspecRunner.configuration.uri_filepath)
+        FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+        File.write(RspecRunner.configuration.uri_filepath, uri)
+      end
+
+      def delete_uri_file
+        File.delete(RspecRunner.configuration.uri_filepath) if File.exist?(RspecRunner.configuration.uri_filepath)
+      end
+
       def assign_uri
         socket = Socket.new(:INET, :STREAM, 0)
         socket.bind(Addrinfo.tcp('127.0.0.1'.freeze, 0))
         free_port = socket.local_address.ip_port
         uri = "druby://localhost:#{free_port}"
 
-        dirname = File.dirname(RspecRunner.configuration.uri_filepath)
-        FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
-        File.write(RspecRunner.configuration.uri_filepath, uri)
+        if File.exist?(RspecRunner.configuration.uri_filepath)
+          File.write(RspecRunner.configuration.uri_filepath, uri)
+        else
+          create_uri_file(uri)
+        end
 
         uri
       end
