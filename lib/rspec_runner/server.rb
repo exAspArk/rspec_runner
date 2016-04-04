@@ -42,6 +42,7 @@ module RspecRunner
 
       def restart
         stop
+        create_uri_file
         fork_process
       end
 
